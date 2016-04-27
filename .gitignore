@@ -5,3 +5,4 @@ input/WP_2012195to2015126_L3.mat
 *.DS_Store
 */*.ipynb_checkpoints
 input/*.mat
+data/*.mat
