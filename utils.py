@@ -1,9 +1,24 @@
 import numpy as np
 import pandas as pd
 import scipy.io as sio
+import datetime
 
 HALF_HOURLY_SCALE = 1800. / 1e6 # each sample is half-hourly, so multiply by 1800
 CARBON_SCALE = 1800. * 10e-6 * 12
+
+###############################################
+# LITTLE HELPER METHODS
+###############################################
+
+def days_elapsed(year, doy, begin_date=datetime.date(2000, 1, 1)):
+    curr_date = datetime.date(year,1,1) + datetime.timedelta(doy - 1)
+    return (curr_date - begin_date).days
+
+def create_days_elapsed_series(year, doy):
+    days_elapsed_lst = []
+    for i in range(year.shape[0]):
+        days_elapsed_lst.append(days_elapsed(year[i], doy[i]))
+    return np.array(days_elapsed_lst)
 
 ###############################################
 # PROCESS VARIOUS DATA FILES
@@ -50,9 +65,9 @@ def process_cimis(filename, interpolate_missing=True):
         df2 = interpolate_missing_values(df2)
     return df2
 
-def process_modis_reflectance_veg_index(filename, prefix="", interpolate_missing=True):
+def process_modis_reflectance_veg_index(filename, prefix="", interpolate_missing=True, method='linear', order=1):
     """
-    Process MOD13Q1 Reflectance and Vegetation Index Data
+    Process MOD13Q1/MCD43A4 Reflectance and Vegetation Index Data
 
     MOD13Q1: 250m 16-day Relectance & Vegetation Indices
     https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod13q1
@@ -66,26 +81,51 @@ def process_modis_reflectance_veg_index(filename, prefix="", interpolate_missing
     bnd1.ref: band 1 reflectance (620 - 670nm) red
     QC: quality flag (0 as good data)
     LSWI2: Land Surface Water Index (2130nm)
+
+    MCD43A4: 500m 8-day Nadir BRDF-Adjusted Relectance & Vegetation Indices
+    YR: year
+    DOY: julian day (specified as the center day of composite period)
+    bnd1.ref: band 1 reflectance (620 - 670nm) red
+    bnd2.ref: band 2 reflectance (841 - 876nm) NIR
+    bnd3.ref: band 3 reflectance (459 - 479nm) blue
+    bnd4.ref: band 4 reflectance (545 - 565nm) green
+    bnd5.ref: band 5 reflectance (1230 - 1250nm)
+    bnd6.ref: band 6 reflectance (1628 - 1652nm) MIR
+    bnd7.ref: band 7 reflectance (2105 - 2155nm) MIR
+    LSWI1: Land Surface Water Index (1680nm)
+    LSWI2: Land Surface Water Index (2130nm)
+    NDVI: Normalized Difference Vegetation Index
+    EVI: Enhanced Vegetation Index
+
+    LANDSAT
+    YR
+    DOY
+    NDVI
+    EVI
+    LSWI2
     """
     print "Processing {0}...".format(filename)
     if prefix:
         prefix += "_"
     df = pd.read_csv(filename)
     # select only good data rows
-    df = df.loc[df["QC"] == 0]
+    if "QC" in df.columns:
+        df = df.loc[df["QC"] == 0]
     df2 = {}
     df2['doy'] = df['DOY']
     df2["year"] = df["YR"]
     df2[prefix + "ndvi"] = df["NDVI"]
     df2[prefix + "evi"] = df["EVI"]
     df2[prefix + "lswi2"] = df["LSWI2"]
-    df2[prefix + "bnd1"] = df["bnd1.ref"]
-    df2[prefix + "bnd2"] = df["bnd2.ref"]
-    df2[prefix + "bnd3"] = df["bnd3.ref"]
-    df2[prefix + "bnd7"] = df["bnd7.ref"]
+    # LANDSAT doesn't have these
+    # df2[prefix + "bnd1"] = df["bnd1.ref"]
+    # df2[prefix + "bnd2"] = df["bnd2.ref"]
+    # df2[prefix + "bnd3"] = df["bnd3.ref"]
+    # df2[prefix + "bnd7"] = df["bnd7.ref"]
     df2 = pd.DataFrame(df2)
+    df2 = df2.sort_values(["year", "doy"]).reset_index(drop=True)
     if interpolate_missing:
-        df2 = interpolate_missing_values(df2)
+        df2 = interpolate_missing_values(df2, method=method, order=order)
     return df2
 
 def process_modis_lst_emissivity(filename, prefix="", interpolate_missing=True):
@@ -174,7 +214,7 @@ def process_tower_lwi(filename, prefix="", interpolate_missing=True):
 # INTERPOLATE MISSING DATA
 ###############################################
 
-def interpolate_missing_values(df):
+def interpolate_missing_values(df, method='spline', order=2):
     min_year, min_doy = df["year"].min(), df[df["year"] == df["year"].min()]["doy"].min()
     max_year, max_doy = df["year"].max(), df[df["year"] == df["year"].max()]["doy"].max()
     missing_rows = []
@@ -194,7 +234,7 @@ def interpolate_missing_values(df):
         else:
             doy += 1
     df = pd.concat((df, pd.DataFrame(missing_rows)))
-    return df.sort_values(["year", "doy"]).reset_index(drop=True).interpolate(method='spline', order=2)
+    return df.sort_values(["year", "doy"]).reset_index(drop=True).interpolate(method=method, order=order)
 
 ###############################################
 # MERGE DATAFRAMES TOGETHER
@@ -203,7 +243,3 @@ def interpolate_missing_values(df):
 def merge_dataframes(dfs):
     df = reduce(lambda left, right: pd.merge(left, right, on=['year', 'doy']), dfs)
     return df
-
-if __name__ == "__main__":
-    WESTPOND_DATAFILE = "input/WP_2012195to2015126_L3.mat"
-    # process_tower(WESTPOND_DATAFILE)

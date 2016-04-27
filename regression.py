@@ -31,8 +31,10 @@ def predict(regr, X_train, Y_train, X_test, Y_test):
     regr.fit(X_train, Y_train)
     X_test = scaler.transform(X_test)
     Y_pred = regr.predict(X_test)
-    score = metrics.r2_score(Y_test, Y_pred)
-    print "R2-score: ", score
+    print "R2-score: ", metrics.r2_score(Y_test, Y_pred)
+    print "Mean Squared Error: ", metrics.mean_squared_error(Y_test, Y_pred)
+    print "Median Absolute Error: ", metrics.median_absolute_error(Y_test, Y_pred)
+    print "Explained Variance Error: ", metrics.explained_variance_score(Y_test, Y_pred)
     return Y_pred
 
 def visualize_preds(df, Y_test, Y_pred, test_years=None):
@@ -51,6 +53,8 @@ def get_train_test_split(X, Y, test_size=0.33):
     return X_train, X_test, y_train, y_test
 
 def plot_true_vs_pred(Y_test, Y_pred):
+    ab = np.polyfit(Y_test, Y_pred, deg=1)
+    plt.plot(Y_test, ab[0] * Y_test + ab[1], color='blue')
     plt.scatter(Y_test, Y_pred, color='green', label="True value")
     min_val = np.min([np.min(Y_test), np.min(Y_pred)])
     max_val = np.max([np.max(Y_test), np.max(Y_pred)])
