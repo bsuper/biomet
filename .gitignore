@@ -6,3 +6,4 @@ input/WP_2012195to2015126_L3.mat
 */*.ipynb_checkpoints
 input/*.mat
 data/*.mat
+*.mat
