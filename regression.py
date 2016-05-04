@@ -10,8 +10,10 @@ import numpy as np
 import pandas as pd
 import random
 import operator
-import skflow
+#import skflow
+import tensorflow.contrib.learn as skflow
 import exp
+import tensorflow as tf
 
 sns.set_style("whitegrid")
 sns.set_palette("bright")
@@ -130,7 +132,7 @@ def svc_cross_val(X, Y, k=10):
 def dnn(nn_lr=0.1, nn_steps=5000, hidden_units=[30, 30]):
     def tanh_dnn(X, y):
         features = skflow.ops.dnn(X, hidden_units=hidden_units,
-          activation=skflow.tf.tanh)
+          activation=tf.tanh)
         return skflow.models.linear_regression(features, y)
 
     regressor = skflow.TensorFlowEstimator(model_fn=tanh_dnn, n_classes=0,
