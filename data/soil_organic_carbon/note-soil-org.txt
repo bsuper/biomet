@@ -1,1 +1,0 @@
-Note: the field “MEDPCTORG” is the median of the SOM percentage range cited for the soil series in each feature’s respective NRCS soil survey. For instance, if the survey reported minimum organic matter content of 40% and maximum of 50%, the MEDPCTORG would be 45%. Feel free to let me know if you have any questions or troubles with the data.

@@ -1,8 +1,0 @@
-Site	Percent_Organic_Matter(%)
-US-Twt	11-18
-US-Tw1	11-18
-US-Tw2	11-18
-US-Tw3	6-11
-US-Tw4	11-18
-US-Myb	11-18	
-US-Snd	11-18

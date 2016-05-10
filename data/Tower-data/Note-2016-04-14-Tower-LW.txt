@@ -1,6 +1,0 @@
-[2016-04-14_daily_TOWER_LW.csv]
-The data stream is derived from West Pond (Tw1) and Shermand Island (Snd) sites.
-
-LW_IN.wp	(MJ/m2/day)
-LW_IN.si	(MJ/m2/day)
-LW_IN		(MJ/m2/day)
