@@ -10,7 +10,6 @@ import numpy as np
 import pandas as pd
 import random
 import operator
-#import skflow
 import tensorflow.contrib.learn as skflow
 import exp
 import tensorflow as tf
@@ -56,7 +55,8 @@ def get_train_test_split(X, Y, test_size=0.33):
 
 def plot_true_vs_pred(Y_test, Y_pred):
     ab = np.polyfit(Y_test, Y_pred, deg=1)
-    plt.plot(Y_test, ab[0] * Y_test + ab[1], color='blue')
+    print "a: {0} b: {1}".format(ab[0], ab[1])
+    plt.plot(Y_test, ab[0] * Y_test + ab[1], color='blue', label="a: {0} b: {1}".format(ab[0], ab[1]))
     plt.scatter(Y_test, Y_pred, color='green', label="True value")
     min_val = np.min([np.min(Y_test), np.min(Y_pred)])
     max_val = np.max([np.max(Y_test), np.max(Y_pred)])
@@ -113,8 +113,8 @@ def xgb_trees_cross_val(X, Y, feature_names=None, k=10):
 # SVM
 #########################################
 
-def svm():
-    return SVR()
+def svm(**kwargs):
+    return SVR(**kwargs)
 
 def svc_cross_val(X, Y, k=10):
     print "Running SVC Cross Validation..."
@@ -151,3 +151,11 @@ def dnn_cross_val(X, Y, regr=dnn(), k=10):
     print "{0}-fold CV Acc Mean: ".format(k), np.mean(cv_scores)
     print "CV Scores: ", ", ".join(map(str, cv_scores))
     return regr
+
+#########################################
+# AUTO-SKLEARN
+#########################################
+
+def autosklearn():
+    # autosklearn not implemented yet
+    pass
