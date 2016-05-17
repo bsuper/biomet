@@ -1,44 +1,41 @@
-# Classifying CO2 and CH4 Fluxes using CIMIS and MODIS data
+# Applying machine learning techniques to CO2 and CH4 fluxes from Fluxnet towers using CIMIS, MODIS, LANDSAT, and other external data
 
-####CIMIS DATA
-1. solar radiation
-2. net radiation
-3. max air temperature
-4. min air temperature
-5. avg air temperature
-6. max soil temperature
-7. min soil temperature
-8. avg soil temperature
+### Files
 
-####NDVI DATA
-1. ndvi (every 16 days)
+`utils.py` - Utility functions for Pandas and for processing Fluxnet, CIMIS, MODIS, Landsat, and other external data sources. These files are given by Housen Chu for this project. The data are located in the `data/` folder.
+`exp.py` - Contains methods for featurizing data and for merging various data sources together for specific experiments.
+`regression.py` - Contains methods for pre-processing featurized data for ML techniques, methods to perform cross-validation with the available models, methods to train and predict, and methods to visualize results. Available models: Random Forests, Gradient Boosted Trees, SVM, and Neural Network.
+`plot_corr.py` - Methods for plotting the correlation matrix from the data
+`data/` - folder containing the data files mentioned above
+`input/` - [DEPRECATED] folder containing data files used for earlier runs
+`notebooks/` - Contains iPython notebooks showing results from runs
+* `notebooks/correlation_plots.ipynb` - Shows correlation heatmap
+* `notebooks/cv_{target}.ipynb` - [DEPRECATED] Cross validation scores from early runs on target
+* `notebooks/cv_{source tower}-{target tower}_{target}.ipynb` - Cross-site cross-validation using source tower data to predict target tower data
+* `data.ipynb` - An overview of the data files
+* `plot_interpolation.ipynb` - Shows the interpolation used to transform 8/16/32-day data into daily data
+* `predict-{source years}_{target years}-{target}.ipynb` - Use 1 year of data to predict other years
+* `{target tower .e.g wp}_{target}_{8_day (250m MODIS) | landsat | none (500m MODIS)}_{cv | predict}.ipynb` - Main notebooks showing cross validation and prediction results with nice plots using the available models.
 
-####WETLAND
-1. co2_gf
-2. ch4_gf
+### Running the code locally
 
-The WETLAND data and CIMIS data was averaged over consecutive 16 day periods and merged with the NDVI data before training.
+Once you've cloned the folder, `cd` into the folder:
+1. `git submodule init & git submodule update` Downloads the data for this project
+1. If you have a virtual environment, create one. Put briefly, a virtual environment allows you to contain all the dependencies needed for a project within one environment.
+* `virtualenv venv # creates a virtual environment called venv`
+* `source venv/bin/activate # enter the virtual environment` 
+2. Install tensorflow (see this link)
+3. `pip install -r requirements.txt # install all the necessary dependencies in the virtual environment`
+4. `jupyter notebook`
+5. Browse the files!
 
----
+Perform `git pull origin master & git submodule update` after the above steps routinely to update your code/data to the most recent version.
 
-### Installing
-Highly recommended `virtualenv`: `pip install virtualenv`
+### Running the code in a VM
 
-```
-git clone https://github.com/bsuper/biomet.git
-cd biomet
-virtualenv venv
-pip install -r requirements.txt
-cp [your WP_2012195to2015126_L3.mat location] input
-```
+If you have Windows or you don't want to setup your computer for local run, I've setup a VirtualBox image for you guys to use. It's quite large (3.4 GB), but campus wifi should make it take download a lot faster!
 
-### Running
-```
-python model.py
-```
-or
+[Download VM](https://gitlab.com/bsuper/biomet-vm-2/raw/master/biomet-ipython.ova)
 
-```
-jupyter notebook
-```
-[Example](https://github.com/bsuper/biomet/blob/master/model.ipynb)
+### Known issues
+* Some of the code reference the `input/` folder, which is deprecated. To make those files work, try changing the reference to `input/` to `data/`. If that doesn't work, then, unfortunately, the file is quite old and probably would require rewriting to work. Sorry!
