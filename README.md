@@ -3,11 +3,17 @@
 ### Files
 
 `utils.py` - Utility functions for Pandas and for processing Fluxnet, CIMIS, MODIS, Landsat, and other external data sources. These files are given by Housen Chu for this project. The data are located in the `data/` folder.
+
 `exp.py` - Contains methods for featurizing data and for merging various data sources together for specific experiments.
+
 `regression.py` - Contains methods for pre-processing featurized data for ML techniques, methods to perform cross-validation with the available models, methods to train and predict, and methods to visualize results. Available models: Random Forests, Gradient Boosted Trees, SVM, and Neural Network.
+
 `plot_corr.py` - Methods for plotting the correlation matrix from the data
+
 `data/` - folder containing the data files mentioned above
+
 `input/` - [DEPRECATED] folder containing data files used for earlier runs
+
 `notebooks/` - Contains iPython notebooks showing results from runs
 * `notebooks/correlation_plots.ipynb` - Shows correlation heatmap
 * `notebooks/cv_{target}.ipynb` - [DEPRECATED] Cross validation scores from early runs on target
