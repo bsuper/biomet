@@ -26,14 +26,14 @@
 ### Running the code locally
 
 Once you've cloned the folder, `cd` into the folder:
+
 1. `git submodule init & git submodule update` Downloads the data for this project
-1. If you have a virtual environment, create one. Put briefly, a virtual environment allows you to contain all the dependencies needed for a project within one environment.
-* `virtualenv venv # creates a virtual environment called venv`
-* `source venv/bin/activate # enter the virtual environment` 
-2. Install tensorflow (see this link)
-3. `pip install -r requirements.txt # install all the necessary dependencies in the virtual environment`
-4. `jupyter notebook`
-5. Browse the files!
+* `virtualenv venv` Creates a virtual environment called venv. Put briefly, a virtual environment allows you to contain all the dependencies needed for a project within one environment.
+- `source venv/bin/activate` Enter the virtual environment
+3. Install tensorflow [[see this link]](https://www.tensorflow.org/versions/r0.8/get_started/os_setup.html#pip-installation)
+4. `pip install -r requirements.txt` Install all the necessary dependencies in the virtual environment`
+5. `jupyter notebook` Start the iPython notebook
+6. Browse the files!
 
 Perform `git pull origin master & git submodule update` after the above steps routinely to update your code/data to the most recent version.
 
