@@ -43,5 +43,8 @@ If you have Windows or you don't want to setup your computer for local run, I've
 
 [Download VM](https://gitlab.com/bsuper/biomet-vm-2/raw/master/biomet-ipython.ova)
 
+user: biomet
+pass: biomet123!
+
 ### Known issues
 * Some of the code reference the `input/` folder, which is deprecated. To make those files work, try changing the reference to `input/` to `data/`. If that doesn't work, then, unfortunately, the file is quite old and probably would require rewriting to work. Sorry!
