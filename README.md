@@ -43,7 +43,17 @@ If you have Windows or you don't want to setup your computer for local run, I've
 
 [Download VM](https://gitlab.com/bsuper/biomet-vm-2/raw/master/biomet-ipython.ova)
 
+Instructions
+
+1. [Download Virtualbox](https://www.virtualbox.org/wiki/Downloads)
+2. Open Virtualbox. `File > Import Appliance` and select the downloaded .ova file.
+3. `cd biomet`
+4. `git pull origin master` # fetch latest version
+5. `git submodule update` # update data folder
+6. `jupyter notebook` # open ipython notebooks
+
 user: biomet
+
 pass: biomet123!
 
 ### Known issues
